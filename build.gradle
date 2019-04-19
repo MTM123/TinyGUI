@@ -1,0 +1,27 @@
+plugins {
+    id 'java'
+}
+
+group 'lv.mtm123'
+version '0.1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    maven {
+        name = 'destroystokyo-repo'
+        url = 'https://repo.destroystokyo.com/repository/maven-public/'
+    }
+    maven {
+        name = 'sonatype'
+        url = 'https://oss.sonatype.org/content/groups/public/'
+    }
+    maven { url "http://repo.dmulloy2.net/nexus/repository/public/" }
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    implementation 'org.github.paperspigot:paperspigot-api:1.8.8-R0.1-20160806.221350-1'
+    compileOnly "com.comphenix.protocol:ProtocolLib:4.4.0"
+}
