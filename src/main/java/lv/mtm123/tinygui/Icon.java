@@ -18,4 +18,8 @@ public class Icon {
         action.click(player, slot);
     }
 
+    public ItemStack getItem() {
+        return item;
+    }
+
 }

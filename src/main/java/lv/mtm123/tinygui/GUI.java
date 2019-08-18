@@ -2,6 +2,7 @@ package lv.mtm123.tinygui;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +14,7 @@ public class GUI {
     private InventoryType type;
     private final Map<Integer, Icon> icons;
 
+    private ItemStack[] cachedItems = null;
 
     public GUI(String title, InventoryType type, int size) {
         this.title = title;
@@ -22,23 +24,35 @@ public class GUI {
     }
 
     public void setIcon(int slot, Icon icon) {
-        this.icons.put(slot, icon);
+        if(slot >= size || slot < 0){
+            throw new IndexOutOfBoundsException(String.format("Slot out of bounds! Expected: min: 0, max: %d, received: %d", size - 1, slot));
+        }
+
+        icons.put(slot, icon);
     }
 
     public Icon getIcon(int slot) {
         return icons.get(slot);
     }
 
-    public void openInventory(Player player) {
+    public ItemStack[] getItems() {
+
+        if(cachedItems == null){
+            cachedItems = new ItemStack[size];
+            icons.forEach((k,v) -> cachedItems[k] = v.getItem());
+        }
+
+        return cachedItems;
 
     }
 
-    public void handleClick(Player player, int slot) {
+    public boolean handleClick(Player player, int slot) {
         if (!icons.containsKey(slot)) {
-            return;
+            return false;
         }
 
         icons.get(slot).click(player, slot);
+        return true;
     }
 
     public void fillEmpty(Icon icon) {
@@ -48,6 +62,23 @@ public class GUI {
             }
         }
     }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public InventoryType getType() {
+        return type;
+    }
+
+    public void handleClose(Player player) {
+        //TODO: Handle closing of inventories
+    }
+
 
     public static boolean hasValidSize(InventoryType type, int size) {
 
@@ -68,6 +99,8 @@ public class GUI {
     }
 
     public static boolean isValidType(InventoryType type) {
+
+        //TODO: Look into making this shorter?
 
         switch (type) {
             case CHEST:
